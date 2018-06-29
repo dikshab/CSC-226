@@ -32,83 +32,65 @@
    R. Little - 06/22/2018
 */
 
- //import edu.princeton.cs.algs4.*;
- import java.util.Scanner;
- import java.io.File;
-import static javafx.scene.input.KeyCode.V;
- 
-   class subset
-    {
-        int parent, rank;
-    };
- 
+import edu.princeton.cs.algs4.*;
+import java.util.Scanner;
+import java.io.File;
+import java.util.Arrays;
+import javafx.scene.input.KeyCode.V;
+	 
 
 //Do not change the name of the PrimVsKruskal class
 public class PrimVsKruskal{
 
-	/* PrimVsKruskal(G)
-		Given an adjacency matrix for connected graph G, with no self-loops or parallel edges,
-		determine if the minimum spanning tree of G found by Prim's algorithm is equal to 
-		the minimum spanning tree of G found by Kruskal's algorithm.
-		
-		If G[i][j] == 0.0, there is no edge between vertex i and vertex j
-		If G[i][j] > 0.0, there is an edge between vertices i and j, and the
-		value of G[i][j] gives the weight of the edge.
-		No entries of G will be negative.
-	*/
-	static boolean PrimVsKruskal(double[][] G){
+/* PrimVsKruskal(G)
+	Given an adjacency matrix for connected graph G, with no self-loops or parallel edges,
+	determine if the minimum spanning tree of G found by Prim's algorithm is equal to 
+	the minimum spanning tree of G found by Kruskal's algorithm.
+	
+	If G[i][j] == 0.0, there is no edge between vertex i and vertex j
+	If G[i][j] > 0.0, there is an edge between vertices i and j, and the
+	value of G[i][j] gives the weight of the edge.
+	No entries of G will be negative.
+*/
+	public static boolean PrimVsKruskal(double[][] G){
 		int n = G.length;
-
 		/* Build the MST by Prim's and the MST by Kruskal's */
 		/* (You may add extra methods if necessary) */
-		
+	
 		/* ... Your code here ... */
 		
-		
+	
 		/* Determine if the MST by Prim equals the MST by Kruskal */
 		boolean pvk = true;
 		/* ... Your code here ... */
-
 		return pvk;	
 	}
-	 // A class to represent a graph edge
-    class Edge implements Comparable<Edge>
+		// A utility function to print the constructed MST stored in
+		// parent[]
+    public void printMST(int[] parent, int n, int[][] graph)
     {
-        int src, dest, weight;
- 
-        // Comparator function used for sorting edges 
-        // based on their weight
-        public int compareTo(Edge compareEdge)
-        {
-            return this.weight-compareEdge.weight;
-        }
-    };
-    // A utility function to print the constructed MST stored in
-    // parent[]
-    void printMST(int[] parent, int n, int[][] graph)
-    {
-        int V = graph.length;
+        int Vertex = graph.length;
         System.out.println("Edge   Weight");
-        for (int i = 1; i < V; i++)
+        for (int i = 1; i < Vertex; i++)
             System.out.println(parent[i]+" - "+ i+"    "+graph[i][parent[i]]);
     }
  
     // Function to construct and print MST for a graph represented
     //  using adjacency matrix representation
-    void primMST(int graph[][])
+    public void primMST(int graph[][])
     {
-        int V = graph.length;
+        int Vertex = graph.length;
         // Array to store constructed MST
-        int parent[] = new int[V];
+        int parent[] = new int[Vertex];
  
         // Key values used to pick minimum weight edge in cut
-        int key[] = new int [V];
+        int key[] = new int [Vertex];
  
         // To represent set of vertices not yet included in MST
-        Boolean mstSet[] = new Boolean[V];
+        Boolean mstSet[] = new Boolean[Vertex];
  
         // Initialize all keys as INFINITE
-        for (int i = 0; i < V; i++)
+        for (int i = 0; i < Vertex; i++)
         {
             key[i] = Integer.MAX_VALUE;
             mstSet[i] = false;
@@ -120,7 +102,7 @@ public class PrimVsKruskal{
         parent[0] = -1; // First node is always root of MST
  
         // The MST will have V vertices
-        for (int count = 0; count < V-1; count++)
+        for (int count = 0; count < Vertex-1; count++)
         {
             // Pick thd minimum key vertex from the set of vertices
             // not yet included in MST
@@ -132,7 +114,7 @@ public class PrimVsKruskal{
             // Update key value and parent index of the adjacent
             // vertices of the picked vertex. Consider only those
             // vertices which are not yet included in MST
-            for (int v = 0; v < V; v++)
+            for (int v = 0; v < Vertex; v++)
  
                 // graph[u][v] is non zero only for adjacent vertices of m
                 // mstSet[v] is false for vertices not yet included in MST
@@ -147,16 +129,16 @@ public class PrimVsKruskal{
     
  
         // print the constructed MST
-        printMST(parent, V, graph);
+        printMST(parent, Vertex, graph);
     }
 
-     int minKey(int key[], Boolean mstSet[])
+    public int minKey(int key[], Boolean mstSet[])
     {
-        int V = key.length;
+        int Vertex = key.length;
         // Initialize min value
         int min = Integer.MAX_VALUE, min_index=-1;
  
-        for (int v = 0; v < V; v++)
+        for (int v = 0; v < Vertex; v++)
             if (mstSet[v] == false && key[v] < min)
             {
                 min = key[v];
@@ -165,10 +147,68 @@ public class PrimVsKruskal{
  
         return min_index;
     }
-    
-    
-    void KruskalMST()
+     
+  // A class to represent a graph edge
+    public class Edge implements Comparable<Edge>
     {
+        int src, dest, weight;
+ 
+        // Comparator function used for sorting edges 
+        // based on their weight
+        @Override
+        public int compareTo(Edge compareEdge)
+        {
+            return this.weight-compareEdge.weight;
+        }
+    };
+ 
+    // A class to represent a subset for union-find
+    public class subset
+    {
+        int parent, rank;
+    };
+ 
+    int V, E;    // V-> no. of vertices & E->no.of edges
+    Edge edge[]; // collection of all edges
+ 
+    // A utility function to find set of an element i
+    // (uses path compression technique)
+    int find(subset subsets[], int i)
+    {
+        // find root and make root as parent of i (path compression)
+        if (subsets[i].parent != i)
+            subsets[i].parent = find(subsets, subsets[i].parent);
+ 
+        return subsets[i].parent;
+    }
+ 
+    // A function that does union of two sets of x and y
+    // (uses union by rank)
+    public void Union(subset subsets[], int x, int y)
+    {
+        int xroot = find(subsets, x);
+        int yroot = find(subsets, y);
+ 
+        // Attach smaller rank tree under root of high rank tree
+        // (Union by Rank)
+        if (subsets[xroot].rank < subsets[yroot].rank)
+            subsets[xroot].parent = yroot;
+        else if (subsets[xroot].rank > subsets[yroot].rank)
+            subsets[yroot].parent = xroot;
+ 
+        // If ranks are same, then make one as root and increment
+        // its rank by one
+        else
+        {
+            subsets[yroot].parent = xroot;
+            subsets[xroot].rank++;
+        }
+    }
+ 
+    // The main function to construct MST using Kruskal's algorithm
+    public void KruskalMST(int[][] graph)
+    {
+		int V = graph.length;
         Edge result[] = new Edge[V];  // Tnis will store the resultant MST
         int e = 0;  // An index variable, used for result[]
         int i = 0;  // An index variable, used for sorted edges
@@ -224,46 +264,6 @@ public class PrimVsKruskal{
             System.out.println(result[i].src+" -- " + 
                    result[i].dest+" == " + result[i].weight);
     }
-		
-	/* main()
-	   Contains code to test the PrimVsKruskal function. You may modify the
-	   testing code if needed, but nothing in this function will be considered
-	   during marking, and the testing process used for marking will not
-	   execute any of the code below. 
-	*/
-   // A function that does union of two sets of x and y
-    // (uses union by rank)
-    void Union(subset subsets[], int x, int y)
-    {
-        int xroot = find(subsets, x);
-        int yroot = find(subsets, y);
- 
-        // Attach smaller rank tree under root of high rank tree
-        // (Union by Rank)
-        if (subsets[xroot].rank < subsets[yroot].rank)
-            subsets[xroot].parent = yroot;
-        else if (subsets[xroot].rank > subsets[yroot].rank)
-            subsets[yroot].parent = xroot;
- 
-        // If ranks are same, then make one as root and increment
-        // its rank by one
-        else
-        {
-            subsets[yroot].parent = xroot;
-            subsets[xroot].rank++;
-        }
-    }
-    // A utility function to find set of an element i
-    // (uses path compression technique)
-    int find(subset subsets[], int i)
-    {
-        // find root and make root as parent of i (path compression)
-        if (subsets[i].parent != i)
-            subsets[i].parent = find(subsets, subsets[i].parent);
- 
-        return subsets[i].parent;
-    }
- 
     
     public static void main(String[] args) {
 		Scanner s;
