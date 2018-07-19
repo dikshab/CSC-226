@@ -23,7 +23,7 @@
 	...
 	<adjacency matrix row n>
 	
-   Entry G[i][j] >= 0.0 of the adjacency matrix gives the weight (as type double) of the edge from 
+   Entry G[i][j] >= 0.0 of the adjacency matrix gives the weight (as type int) of the edge from 
    vertex i to vertex j (if G[i][j] is 0.0, then the edge does not exist).
    Note that since the graph is undirected, it is assumed that G[i][j]
    is always equal to G[j][i].
@@ -32,11 +32,10 @@
    R. Little - 06/22/2018
 */
 
-import edu.princeton.cs.algs4.*;
+//import edu.princeton.cs.algs4.*;
 import java.util.Scanner;
 import java.io.File;
 import java.util.Arrays;
-import javafx.scene.input.KeyCode.V;
 	 
 
 //Do not change the name of the PrimVsKruskal class
@@ -52,17 +51,18 @@ public class PrimVsKruskal{
 	value of G[i][j] gives the weight of the edge.
 	No entries of G will be negative.
 */
-	public static boolean PrimVsKruskal(double[][] G){
+	public boolean PrimVsKruskal(int[][] G){
 		int n = G.length;
 		/* Build the MST by Prim's and the MST by Kruskal's */
 		/* (You may add extra methods if necessary) */
 	
 		/* ... Your code here ... */
-		
-	
+		primMST(G);
+                KruskalMST(G);
 		/* Determine if the MST by Prim equals the MST by Kruskal */
 		boolean pvk = true;
-		/* ... Your code here ... */
+		//if(primMST(G)== KruskalMST(G))
+                    pvk = true;
 		return pvk;	
 	}
 		// A utility function to print the constructed MST stored in
@@ -206,13 +206,13 @@ public class PrimVsKruskal{
     }
  
     // The main function to construct MST using Kruskal's algorithm
-    public void KruskalMST(int[][] graph)
+    public Edge[] KruskalMST(int[][] graph)
     {
-		int V = graph.length;
-        Edge result[] = new Edge[V];  // Tnis will store the resultant MST
+        int vertex = graph.length;
+        Edge result[] = new Edge[vertex];  // Tnis will store the resultant MST
         int e = 0;  // An index variable, used for result[]
         int i = 0;  // An index variable, used for sorted edges
-        for (i=0; i<V; ++i)
+        for (i=0; i<vertex; ++i)
             result[i] = new Edge();
  
         // Step 1:  Sort all the edges in non-decreasing order of their
@@ -221,12 +221,12 @@ public class PrimVsKruskal{
         Arrays.sort(edge);
  
         // Allocate memory for creating V ssubsets
-        subset subsets[] = new subset[V];
-        for(i=0; i<V; ++i)
+        subset subsets[] = new subset[vertex];
+        for(i=0; i<vertex; ++i)
             subsets[i]=new subset();
  
         // Create V subsets with single elements
-        for (int v = 0; v < V; ++v)
+        for (int v = 0; v < vertex; ++v)
         {
             subsets[v].parent = v;
             subsets[v].rank = 0;
@@ -235,7 +235,7 @@ public class PrimVsKruskal{
         i = 0;  // Index used to pick next edge
  
         // Number of edges to be taken is equal to V-1
-        while (e < V - 1)
+        while (e < vertex - 1)
         {
             // Step 2: Pick the smallest edge. And increment 
             // the index for next iteration
@@ -263,6 +263,8 @@ public class PrimVsKruskal{
         for (i = 0; i < e; ++i)
             System.out.println(result[i].src+" -- " + 
                    result[i].dest+" == " + result[i].weight);
+    
+        return result;
     }
     
     public static void main(String[] args) {
@@ -281,11 +283,11 @@ public class PrimVsKruskal{
 		}
 		
 		int n = s.nextInt();
-		double[][] G = new double[n][n];
+		int[][] G = new int[n][n];
 		int valuesRead = 0;
 		for (int i = 0; i < n && s.hasNextDouble(); i++){
 			for (int j = 0; j < n && s.hasNextDouble(); j++){
-				G[i][j] = s.nextDouble();
+				G[i][j] = (int) s.nextDouble();
 				if (i == j && G[i][j] != 0.0) {
 					System.out.printf("Adjacency matrix contains self-loops.\n");
 					return;
@@ -307,7 +309,7 @@ public class PrimVsKruskal{
 			return;
 		}	
 		
-        boolean pvk = PrimVsKruskal(G);
-        System.out.printf("Does Prim MST = Kruskal MST? %b\n", pvk);
+        //boolean pvk = PrimVsKruskal(G);
+        System.out.printf("Does Prim MST = Kruskal MST? %b\n");
     }
 }
