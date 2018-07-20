@@ -282,7 +282,9 @@ public class PrimVsKruskal{
 			System.out.printf("Reading input values from stdin.\n");
 		}
 		
-		int n = s.nextInt();
+		int n = s.nextInt()
+                        
+                        ;
 		int[][] G = new int[n][n];
 		int valuesRead = 0;
 		for (int i = 0; i < n && s.hasNextDouble(); i++){
